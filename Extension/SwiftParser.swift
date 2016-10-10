@@ -176,11 +176,19 @@ class SwiftParser {
             retString += ", "
             return string.nextNonSpaceIndex(string.index(after: strIndex))
         case "{", "[", "(":
-            let count = retString.count - newlineIndex - (indent + tempIndent) * SwiftParser.indentChar.count
+            let count: Int
+            if string.nextNonSpaceChar(string.index(after: strIndex)) == "\n" {
+                count = 0
+            } else {
+                count = retString.count - newlineIndex - (indent + tempIndent) * SwiftParser.indentChar.count
+            }
             let block = Block(indent: indent, tempIndent: tempIndent, indentCount: count, type: blockType)
             blockStack.append(block)
             blockType = BlockType(rawValue: char) ?? .curly
             if blockType == .parentheses {
+                if count == 0 {
+                    tempIndent = 1
+                }
                 indent += tempIndent
             } else {
                 indent += tempIndent + 1

@@ -49,6 +49,10 @@ extension String {
         return nextStringIndex(index) { !$0.isSpace() }
     }
 
+    func nextNonSpaceChar(_ start: String.Index) -> Character {
+        return self[nextNonSpaceIndex(start)]
+    }
+
     func lastStringIndex(_ start: String.Index, checker: (Character) -> Bool) -> String.Index {
         var index = start
         while index > startIndex {
